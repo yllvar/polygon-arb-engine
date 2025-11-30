@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-AI Bridge - All-in-One MEV Bot
-Single file that starts API server + AI CLI
+Polygon Arbitrage Engine - All-in-One MEV Bot
+Single file that starts API server + CLI
 
 Architecture:
 1. Starts FastAPI server in background thread
@@ -10,7 +10,8 @@ Architecture:
 3. Gets ACTUAL DEX POOL PRICES (quote_0to1, quote_1to0) from DEX contracts
 4. Uses CoinGecko ONLY for USD valuation, NOT for arbitrage calculations
 5. ArbFinder uses DEX pool reserves/quotes for arbitrage math
-6. AI-powered CLI interface
+6. Natural language CLI interface
+7. Streamlit web interface
 
 Price Data Flow:
 - Pool Discovery: discover_pools.py → pool_registry.json (266+ pools)
@@ -19,7 +20,7 @@ Price Data Flow:
 - Arbitrage Calc: ArbFinder → DEX pool prices (NOT CoinGecko!)
 
 Run:
-  python ai_bridge.py
+  python bridge.py
 """
 
 import json
@@ -57,11 +58,11 @@ load_dotenv()
 # Configuration
 API_PORT = int(os.getenv("API_PORT", "5050"))
 API_HOST = os.getenv("API_HOST", "127.0.0.1")
-MIN_PROFIT_USD = float(os.getenv("ARBIGIRL_MIN_PROFIT_USD", "1.0"))
-AUTO_EXECUTE = os.getenv("ARBIGIRL_AUTO_EXECUTE", "false").lower() in ("1", "true", "yes", "y")
+MIN_PROFIT_USD = float(os.getenv("ARBITRAGE_MIN_PROFIT_USD", "1.0"))
+AUTO_EXECUTE = os.getenv("ARBITRAGE_AUTO_EXECUTE", "false").lower() in ("1", "true", "yes", "y")
 
 # Logging
-LOG_PATH = os.getenv("ARBIGIRL_LOG", "arbigirl.log")
+LOG_PATH = os.getenv("ARBITRAGE_LOG", "arbitrage.log")
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s",
@@ -90,6 +91,7 @@ class ScanRequest(BaseModel):
     min_profit_usd: Optional[float] = 1.0
     min_tvl: Optional[float] = 3000.0
     max_opportunities: Optional[int] = 10
+    quick_mode: Optional[bool] = True
 
 class SimulateRequest(BaseModel):
     strategy: Dict[str, Any]
@@ -172,6 +174,100 @@ async def get_status():
         } if _bot_stats["last_scan_time"] else None
     }
 
+@app.get("/cache/status")
+async def get_cache_status():
+    """Get cache status information"""
+    try:
+        bot = get_bot()
+        
+        # Check cache files manually
+        cache_dir = bot.cache.cache_dir
+        cache_files = {}
+        for file in cache_dir.glob("*.json"):
+            try:
+                size = file.stat().st_size
+                cache_files[file.name] = {
+                    "size_bytes": size,
+                    "is_empty": size <= 2  # Empty JSON files are 2 bytes ("[]")
+                }
+            except:
+                cache_files[file.name] = {"error": "Cannot read file"}
+        
+        return {
+            "status": "ok",
+            "cache_location": str(cache_dir),
+            "cache_files": cache_files,
+            "message": "Cache status retrieved"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e)
+        }
+
+@app.post("/cache/populate")
+async def populate_cache():
+    """Populate cache with initial data"""
+    try:
+        bot = get_bot()
+        
+        # Force refresh of pool data
+        logger.info("Populating cache with fresh data...")
+        
+        # This will populate the cache
+        pools = bot.scan_pools()
+        
+        return {
+            "status": "ok",
+            "message": f"Cache populated with {sum(len(pairs) for pairs in pools.values())} pools",
+            "pools_by_dex": {dex: len(pairs) for dex, pairs in pools.items()}
+        }
+    except Exception as e:
+        return {
+            "status": "error", 
+            "error": str(e)
+        }
+
+@app.post("/scan/test")
+async def test_scan():
+    """Test scan endpoint that returns mock data immediately"""
+    import random
+    
+    # Generate mock opportunities for testing
+    mock_opportunities = [
+        {
+            "pair": "WETH/USDC",
+            "dex_buy": "QuickSwap",
+            "dex_sell": "SushiSwap",
+            "profit_usd": round(random.uniform(1.5, 15.0), 2),
+            "roi_percent": round(random.uniform(0.5, 3.0), 2),
+            "amount_usd": 10000,
+            "path": "WETH → USDC",
+            "dex_path": "QuickSwap → SushiSwap"
+        },
+        {
+            "pair": "USDC/DAI",
+            "dex_buy": "Uniswap V3",
+            "dex_sell": "QuickSwap",
+            "profit_usd": round(random.uniform(0.8, 8.0), 2),
+            "roi_percent": round(random.uniform(0.2, 1.5), 2),
+            "amount_usd": 5000,
+            "path": "USDC → DAI",
+            "dex_path": "Uniswap V3 → QuickSwap"
+        }
+    ]
+    
+    return {
+        "status": "ok",
+        "found_opportunities": mock_opportunities,
+        "total_found": len(mock_opportunities),
+        "scan_duration_seconds": 0.1,
+        "quick_mode": True,
+        "message": f"Test scan completed - found {len(mock_opportunities)} mock opportunities",
+        "timestamp": datetime.now().isoformat(),
+        "is_test_data": True
+    }
+
 @app.post("/scan")
 async def scan_opportunities(request: Optional[ScanRequest] = None):
     """Scan for arbitrage opportunities using PolygonArbBot"""
@@ -184,10 +280,49 @@ async def scan_opportunities(request: Optional[ScanRequest] = None):
         if request and request.min_profit_usd:
             bot.arb_finder.min_profit_usd = request.min_profit_usd
 
-        logger.info(f"Starting scan with min_profit=${bot.arb_finder.min_profit_usd}")
-
-        # Run scan using PolygonArbBot (uses pool_registry.json with 300+ pools)
-        opportunities = bot.scan()
+        # Use quick scan mode for API (use cached data)
+        quick_mode = request.quick_mode if request else True
+        
+        if quick_mode:
+            logger.info(f"Starting QUICK scan with min_profit=${bot.arb_finder.min_profit_usd}")
+            # Use cached pools data for faster response
+            pools = bot.scan_pools()  # This uses cache
+            
+            # For quick mode, limit to top pools by TVL for faster calculation
+            if pools and len(pools) > 0:
+                # Flatten pools and sort by TVL, keep only top 10
+                all_pools = []
+                for dex_name, pairs in pools.items():
+                    for pair_name, pool_data in pairs.items():
+                        if pool_data.get('tvl_usd', 0) > 0:
+                            all_pools.append({
+                                'dex': dex_name,
+                                'pair': pair_name,
+                                'tvl_usd': pool_data['tvl_usd'],
+                                'data': pool_data
+                            })
+                
+                # Sort by TVL and keep top 10
+                all_pools.sort(key=lambda x: x['tvl_usd'], reverse=True)
+                top_pools = all_pools[:10]
+                
+                # Reconstruct limited pools dict
+                limited_pools = {}
+                for pool_info in top_pools:
+                    dex = pool_info['dex']
+                    pair = pool_info['pair']
+                    if dex not in limited_pools:
+                        limited_pools[dex] = {}
+                    limited_pools[dex][pair] = pool_info['data']
+                
+                logger.info(f"Quick scan using {len(limited_pools)} DEXes with {sum(len(pairs) for pairs in limited_pools.values())} top pools")
+                opportunities = bot.arb_finder.find_opportunities(limited_pools)
+            else:
+                opportunities = []
+        else:
+            logger.info(f"Starting FULL scan with min_profit=${bot.arb_finder.min_profit_usd}")
+            # Run full scan using PolygonArbBot (uses pool_registry.json with 300+ pools)
+            opportunities = bot.scan()
 
         scan_duration = time.time() - start_time
         _bot_stats["total_scans"] += 1
@@ -202,6 +337,8 @@ async def scan_opportunities(request: Optional[ScanRequest] = None):
             "found_opportunities": opportunities[:max_opps],
             "total_found": len(opportunities),
             "scan_duration_seconds": scan_duration,
+            "quick_mode": quick_mode,
+            "message": f"Found {len(opportunities)} opportunities in {scan_duration:.2f}s",
             "timestamp": datetime.now().isoformat()
         }
 
@@ -319,13 +456,13 @@ def parse_intent(user_input: str) -> Tuple[str, Dict]:
 class CLInterface:
     """CLI Interface"""
 
-class ArbiGirl:
-    """AI-powered arbitrage bot - runs components independently or together"""
+class ArbitrageEngine:
+    """Polygon arbitrage engine - runs components independently or together"""
 
     def __init__(self):
-        """Initialize ArbiGirl with pool fetcher and arb finder"""
+        """Initialize ArbitrageEngine with pool fetcher and arb finder"""
         print(f"\n{Fore.MAGENTA}{'='*60}")
-        print(f"         🤖 ArbiGirl MEV Bot v5.0")
+        print(f"         🔧 Polygon Arbitrage Engine v5.0")
         print(f"         Run any component independently!")
         print(f"{'='*60}{Style.RESET_ALL}\n")
 
@@ -345,7 +482,7 @@ class ArbiGirl:
         self.last_opportunities = []
         self.last_pools = None
 
-        # AI Monitoring (built-in to ArbiGirl)
+        # System Monitoring (built-in to ArbitrageEngine)
         self.events = []
         self.max_history = 10000
         self.stats = {
@@ -357,10 +494,10 @@ class ArbiGirl:
             'cache_misses': 0
         }
 
-        print(f"\n{Fore.GREEN}✓ ArbiGirl initialized successfully!{Style.RESET_ALL}")
+        print(f"\n{Fore.GREEN}✓ ArbitrageEngine initialized successfully!{Style.RESET_ALL}")
         print(f"  • Price Data Fetcher ready (pair 1hr, TVL 3hr, prices 5min)")
         print(f"  • Arb Finder ready (instant scanning)")
-        print(f"  • AI Monitoring active (tracking all operations)")
+        print(f"  • System Monitoring active (tracking all operations)")
         self._show_help()
 
     def log_event(self, event_type: str, details: Dict[str, Any]):
@@ -503,7 +640,7 @@ class ArbiGirl:
         print(f"  {Fore.YELLOW}run <file.py>{Style.RESET_ALL} - Run a Python file and diagnose")
         print(f"  {Fore.YELLOW}clear{Style.RESET_ALL}      - Clear the screen")
         print(f"  {Fore.YELLOW}help{Style.RESET_ALL}       - Show this help")
-        print(f"  {Fore.YELLOW}exit{Style.RESET_ALL}       - Exit ArbiGirl")
+        print(f"  {Fore.YELLOW}exit{Style.RESET_ALL}       - Exit ArbitrageEngine")
 
     def handle_show(self, what: str):
         """Show various data based on what user wants to see"""
@@ -1055,12 +1192,12 @@ class ArbiGirl:
         """Clear the screen"""
         os.system('cls' if os.name == 'nt' else 'clear')
         print(f"\n{Fore.MAGENTA}{'='*60}")
-        print(f"         🤖 ArbiGirl MEV Bot v5.0")
+        print(f"         🔧 Polygon Arbitrage Engine v5.0")
         print(f"{'='*60}{Style.RESET_ALL}\n")
         self._show_help()
 
     def handle_ask(self, question: str):
-        """Ask ArbiGirl about operations"""
+        """Ask ArbitrageEngine about operations"""
         if not question:
             print(f"{Fore.YELLOW}Usage: ask <question>{Style.RESET_ALL}")
             print(f"\nExamples:")
@@ -1071,7 +1208,7 @@ class ArbiGirl:
             print(f"  • ask show cache activity")
             return
 
-        print(f"\n{Fore.CYAN}🤖 ArbiGirl:{Style.RESET_ALL}")
+        print(f"\n{Fore.CYAN}🔧 ArbitrageEngine:{Style.RESET_ALL}")
         answer = self._query_ai(question)
         print(f"{answer}\n")
 
@@ -1232,7 +1369,15 @@ def main():
     """Main entry point"""
     try:
         # Check for required files
-        required_files = ['price_data_fetcher.py', 'arb_finder.py', 'pool_registry.json', 'cache.py', 'rpc_mgr.py']
+        project_root = os.getenv("PROJECT_ROOT", ".")
+        config_path = os.path.join(project_root, "config")
+        required_files = [
+            os.path.join(project_root, "src", "price_data_fetcher.py"),
+            os.path.join(project_root, "src", "arb_finder.py"),
+            os.path.join(config_path, "pool_registry.json"),
+            os.path.join(project_root, "src", "cache.py"),
+            os.path.join(project_root, "src", "rpc_mgr.py")
+        ]
         missing = [f for f in required_files if not os.path.exists(f)]
 
         if missing:
@@ -1242,12 +1387,12 @@ def main():
             print(f"\n{Fore.YELLOW}Please make sure all files are in the same directory!{Style.RESET_ALL}")
             return
 
-        # Start ArbiGirl
-        bot = ArbiGirl()
+        # Start ArbitrageEngine
+        bot = ArbitrageEngine()
         bot.run()
 
     except Exception as e:
-        print(f"{Fore.RED}Failed to start ArbiGirl: {e}{Style.RESET_ALL}")
+        print(f"{Fore.RED}Failed to start ArbitrageEngine: {e}{Style.RESET_ALL}")
         import traceback
         traceback.print_exc()
 

@@ -30,8 +30,12 @@ class Cache:
         'default': 60                         # 60 seconds - fallback
     }
     
-    def __init__(self, cache_dir: str = "./cache"):
+    def __init__(self, cache_dir: str = None):
         """Initialize cache system"""
+        if cache_dir is None:
+            project_root = os.getenv("PROJECT_ROOT", ".")
+            cache_dir = os.path.join(project_root, "data", "cache")
+        
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         

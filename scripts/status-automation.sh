@@ -2,8 +2,9 @@
 # Check automation status
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PID_FILE="$SCRIPT_DIR/automation.pid"
-LOG_DIR="$SCRIPT_DIR/logs"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+PID_FILE="$PROJECT_DIR/automation.pid"
+LOG_DIR="$PROJECT_DIR/logs"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'

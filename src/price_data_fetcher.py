@@ -7,6 +7,7 @@ Fetches pool data and token prices:
 """
 
 import json
+import os
 import time
 import requests
 from typing import Dict, Optional
@@ -128,9 +129,14 @@ class PriceDataFetcher:
         self,
         rpc_manager: RPCManager,
         cache: Cache,
-        pool_registry_path: str = "./pool_registry.json",
+        pool_registry_path: str = None,
         min_tvl_usd: float = 3000
     ):
+        # Default to config directory if not specified
+        if pool_registry_path is None:
+            project_root = os.getenv("PROJECT_ROOT", ".")
+            pool_registry_path = os.path.join(project_root, "config", "pool_registry.json")
+        
         self.rpc_manager = rpc_manager
         self.cache = cache
         self.min_tvl_usd = min_tvl_usd

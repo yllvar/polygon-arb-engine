@@ -1,0 +1,302 @@
+{
+  "quickswap_v2:0x90bc3e68ba8393a3bf2d79309365089975341a43": {
+    "timestamp": 1764496371.7959418,
+    "data": {
+      "tvl_usd": 70872.22886116257,
+      "reserve0": 11787146685858435467,
+      "reserve1": 191127415216179206562,
+      "token0": "WETH",
+      "token1": "AAVE",
+      "price0_usd": 3006.59,
+      "price1_usd": 185.39
+    }
+  },
+  "quickswap_v2:0x59153f27eefe07e5ece4f9304ebba1da6f53ca88": {
+    "timestamp": 1764496391.879736,
+    "data": {
+      "tvl_usd": 2238103.0095810723,
+      "reserve0": 1120835903784072168109057,
+      "reserve1": 1117267105797,
+      "token0": "DAI",
+      "token1": "USDT",
+      "price0_usd": 1.0,
+      "price1_usd": 1.0
+    }
+  },
+  "quickswap_v2:0x4a35582a710e1f4b2030a3f826da20bfb6703c09": {
+    "timestamp": 1764496392.7810571,
+    "data": {
+      "tvl_usd": 83439.51950997645,
+      "reserve0": 13850369377625802268,
+      "reserve1": 41797137442900492409647,
+      "token0": "WETH",
+      "token1": "DAI",
+      "price0_usd": 3006.59,
+      "price1_usd": 1.0
+    }
+  },
+  "quickswap_v2:0xeef611894ceae652979c9d0dae1deb597790c6ee": {
+    "timestamp": 1764496393.222327,
+    "data": {
+      "tvl_usd": 13740.780267755596,
+      "reserve0": 51321198506146708488911,
+      "reserve1": 6892927434198818306167,
+      "token0": "WPOL",
+      "token1": "DAI",
+      "price0_usd": 0.13343127270764368,
+      "price1_usd": 1.0
+    }
+  },
+  "quickswap_v2:0x5ca6ca6c3709e1e6cfe74a50cf6b2b6ba2dadd67": {
+    "timestamp": 1764496402.763445,
+    "data": {
+      "tvl_usd": 216503.95502693276,
+      "reserve0": 8287427506999216900873,
+      "reserve1": 35983382340276860642,
+      "token0": "LINK",
+      "token1": "WETH",
+      "price0_usd": 13.07,
+      "price1_usd": 3006.59
+    }
+  },
+  "quickswap_v2:0x60e70705b52a4a5bdc1d8614426ba5016a68ab38": {
+    "timestamp": 1764496412.896399,
+    "data": {
+      "tvl_usd": 8082.6203110449105,
+      "reserve0": 1345452082549885145,
+      "reserve1": 314134956126681927294661,
+      "token0": "WETH",
+      "token1": "QUICK",
+      "price0_usd": 3006.59,
+      "price1_usd": 0.01285243
+    }
+  },
+  "quickswap_v2:0xf3eb2f17eafbf35e92c965a954c6e7693187057d": {
+    "timestamp": 1764496413.2878861,
+    "data": {
+      "tvl_usd": 36719.8137463748,
+      "reserve0": 137452651786066425494275,
+      "reserve1": 1430027744287997262801754,
+      "token0": "WPOL",
+      "token1": "QUICK",
+      "price0_usd": 0.13343127270764368,
+      "price1_usd": 0.01285243
+    }
+  },
+  "quickswap_v2:0xf7135272a5584eb116f5a77425118a8b4a2ddfdb": {
+    "timestamp": 1764496433.020761,
+    "data": {
+      "tvl_usd": 19378.11930176685,
+      "reserve0": 3217580337986701688,
+      "reserve1": 1565189424738614395843,
+      "token0": "WETH",
+      "token1": "UNI",
+      "price0_usd": 3006.59,
+      "price1_usd": 6.2
+    }
+  },
+  "quickswap_v2:0xe43ab6540c0929ef29d216a34ab1f0eacc5c3825": {
+    "timestamp": 1764496433.783731,
+    "data": {
+      "tvl_usd": 3284.451519,
+      "reserve0": 1643411123,
+      "reserve1": 1641040396,
+      "token0": "USDC",
+      "token1": "USDT",
+      "price0_usd": 1.0,
+      "price1_usd": 1.0
+    }
+  },
+  "quickswap_v2:0x7baf833f82bb1971f99a5a5d84bed1d5d0dedd70": {
+    "timestamp": 1764496438.7053099,
+    "data": {
+      "tvl_usd": 26226.43011870077,
+      "reserve0": 13125688422,
+      "reserve1": 4357342270379655661,
+      "token0": "USDC",
+      "token1": "WETH",
+      "price0_usd": 1.0,
+      "price1_usd": 3006.59
+    }
+  },
+  "quickswap_v2:0xf6422b997c7f54d1c6a6e103bcb1499eea0a7046": {
+    "timestamp": 1764496443.638638,
+    "data": {
+      "tvl_usd": 166526.96764512622,
+      "reserve0": 27688147900819940514,
+      "reserve1": 83280059048,
+      "token0": "WETH",
+      "token1": "USDT",
+      "price0_usd": 3006.59,
+      "price1_usd": 1.0
+    }
+  },
+  "quickswap_v2:0x604229c960e5cacf2aaeac8be68ac07ba9df81c3": {
+    "timestamp": 1764496444.012494,
+    "data": {
+      "tvl_usd": 133042.6891020028,
+      "reserve0": 497685183424010488608998,
+      "reserve1": 66635921670,
+      "token0": "WPOL",
+      "token1": "USDT",
+      "price0_usd": 0.13343127270764368,
+      "price1_usd": 1.0
+    }
+  },
+  "quickswap_v2:0xdc9232e2df177d7a12fdff6ecbab114e2231198d": {
+    "timestamp": 1764496444.419179,
+    "data": {
+      "tvl_usd": 538213.3675808415,
+      "reserve0": 295136427,
+      "reserve1": 89343091999049270944,
+      "token0": "WBTC",
+      "token1": "WETH",
+      "price0_usd": 91346,
+      "price1_usd": 3006.59
+    }
+  },
+  "quickswap_v2:0xf6b87181bf250af082272e3f448ec3238746ce3d": {
+    "timestamp": 1764496449.045623,
+    "data": {
+      "tvl_usd": 12372.240586117388,
+      "reserve0": 46274378354510604927258,
+      "reserve1": 6784962,
+      "token0": "WPOL",
+      "token1": "WBTC",
+      "price0_usd": 0.13343127270764368,
+      "price1_usd": 91346
+    }
+  },
+  "quickswap_v2:0xadbf1854e5883eb8aa7baf50705338739e558e5b": {
+    "timestamp": 1764496452.985276,
+    "data": {
+      "tvl_usd": 640450.0833193997,
+      "reserve0": 2395231779558735037164339,
+      "reserve1": 106716000034285866803,
+      "token0": "WPOL",
+      "token1": "WETH",
+      "price0_usd": 0.13343127270764368,
+      "price1_usd": 3006.59
+    }
+  },
+  "sushiswap:0x2813d43463c374a680f235c428fb1d7f08de0b69": {
+    "timestamp": 1764496464.176579,
+    "data": {
+      "tvl_usd": 201275.4383526508,
+      "reserve0": 33482498451399233611,
+      "reserve1": 542679180827759749097,
+      "token0": "WETH",
+      "token1": "AAVE",
+      "price0_usd": 3006.59,
+      "price1_usd": 185.39
+    }
+  },
+  "sushiswap:0x396e655c309676caf0acf4607a868e0cded876db": {
+    "timestamp": 1764496474.672456,
+    "data": {
+      "tvl_usd": 57308.00601695351,
+      "reserve0": 67405652175223800278936,
+      "reserve1": 9544589008277531028,
+      "token0": "CRV",
+      "token1": "WETH",
+      "price0_usd": 0.424465,
+      "price1_usd": 3006.59
+    }
+  },
+  "sushiswap:0x6ff62bfb8c12109e8000935a6de54dad83a4f39f": {
+    "timestamp": 1764496490.039506,
+    "data": {
+      "tvl_usd": 95515.60454504032,
+      "reserve0": 15878285014324579390,
+      "reserve1": 47776111603822177763986,
+      "token0": "WETH",
+      "token1": "DAI",
+      "price0_usd": 3006.59,
+      "price1_usd": 1.0
+    }
+  },
+  "sushiswap:0x74d23f21f780ca26b47db16b0504f2e3832b9321": {
+    "timestamp": 1764496496.0398889,
+    "data": {
+      "tvl_usd": 134894.35482188483,
+      "reserve0": 5164866868003406535820,
+      "reserve1": 22413945651745106321,
+      "token0": "LINK",
+      "token1": "WETH",
+      "price0_usd": 13.07,
+      "price1_usd": 3006.59
+    }
+  },
+  "sushiswap:0x116ff0d1caa91a6b94276b3471f33dbeb52073e7": {
+    "timestamp": 1764496505.090784,
+    "data": {
+      "tvl_usd": 8129.608285270782,
+      "reserve0": 7385447284823145330240,
+      "reserve1": 1360783999282354795,
+      "token0": "SNX",
+      "token1": "WETH",
+      "price0_usd": 0.54679,
+      "price1_usd": 3006.59
+    }
+  },
+  "sushiswap:0xb5846453b67d0b4b4ce655930cf6e4129f4416d7": {
+    "timestamp": 1764496514.963547,
+    "data": {
+      "tvl_usd": 9074.343045127433,
+      "reserve0": 11876800428837371434832,
+      "reserve1": 1504942347328506755,
+      "token0": "SUSHI",
+      "token1": "WETH",
+      "price0_usd": 0.383066,
+      "price1_usd": 3006.59
+    }
+  },
+  "sushiswap:0xc2755915a85c6f6c1c0f3a86ac8c058f11caa9c9": {
+    "timestamp": 1764496526.668612,
+    "data": {
+      "tvl_usd": 133828.54729635385,
+      "reserve0": 22260414185956131521,
+      "reserve1": 66900608609,
+      "token0": "WETH",
+      "token1": "USDT",
+      "price0_usd": 3006.59,
+      "price1_usd": 1.0
+    }
+  },
+  "sushiswap:0x55ff76bffc3cdd9d5fdbbc2ece4528ecce45047e": {
+    "timestamp": 1764496530.982469,
+    "data": {
+      "tvl_usd": 11949.769854424354,
+      "reserve0": 44702979776664140348390,
+      "reserve1": 5984994369,
+      "token0": "WPOL",
+      "token1": "USDT",
+      "price0_usd": 0.13343127270764368,
+      "price1_usd": 1.0
+    }
+  },
+  "sushiswap:0xe62ec2e799305e0d367b0cc3ee2cda135bf89816": {
+    "timestamp": 1764496535.5580869,
+    "data": {
+      "tvl_usd": 604782.4473145702,
+      "reserve0": 331484140,
+      "reserve1": 100441012838521435145,
+      "token0": "WBTC",
+      "token1": "WETH",
+      "price0_usd": 91346,
+      "price1_usd": 3006.59
+    }
+  },
+  "sushiswap:0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e": {
+    "timestamp": 1764496536.492435,
+    "data": {
+      "tvl_usd": 374083.7066840667,
+      "reserve0": 1399957353181089208395397,
+      "reserve1": 62291704327058131041,
+      "token0": "WPOL",
+      "token1": "WETH",
+      "price0_usd": 0.13343127270764368,
+      "price1_usd": 3006.59
+    }
+  }
+}

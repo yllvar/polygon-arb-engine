@@ -58,7 +58,9 @@ class PolygonArbBot:
         
         # Initialize Persistent Cache
         print(f"\n{Fore.YELLOW}💾 Initializing Persistent Cache...{Style.RESET_ALL}")
-        self.cache = Cache(cache_dir="./cache")
+        project_root = os.getenv("PROJECT_ROOT", ".")
+        cache_dir = os.path.join(project_root, "data", "cache")
+        self.cache = Cache(cache_dir=cache_dir)
         
         # Initialize Price Data Fetcher
         print(f"\n{Fore.YELLOW}🔍 Initializing Price Data Fetcher...{Style.RESET_ALL}")
@@ -134,7 +136,7 @@ class PolygonArbBot:
     
     def simulate_strategy(self, strategy: dict) -> dict:
         """
-        Simulate a strategy before execution (ArbiGirl compatibility)
+        Simulate a strategy before execution (Polygon Arbitrage Engine compatibility)
 
         Args:
             strategy: Dict with est_profit_usd, pair, payload
@@ -263,7 +265,7 @@ class PolygonArbBot:
     
     def execute_proposal(self, proposal: dict) -> str:
         """
-        Execute a trading proposal (ArbiGirl compatibility)
+        Execute a trading proposal (Polygon Arbitrage Engine compatibility)
         
         Returns:
             Transaction hash (0x...) or uuid:// for tracking
@@ -327,7 +329,7 @@ class PolygonArbBot:
                 dex2_data=bytes.fromhex(payload.get("dex2Data", "").replace("0x", "")) if payload.get("dex2Data") else b'',
                 use_flashbots=False,
                 use_balancer=use_balancer,
-                bot_source="arbigirl"
+                bot_source="polygon-arb-engine"
             )
             
             if result.get("success"):
@@ -355,7 +357,7 @@ class PolygonArbBot:
                         dex2_data=bytes.fromhex(payload.get("dex2Data", "").replace("0x", "")) if payload.get("dex2Data") else b'',
                         use_flashbots=False,
                         use_balancer=False,
-                        bot_source="arbigirl"
+                        bot_source="polygon-arb-engine"
                     )
                     
                     if result.get("success"):
@@ -637,7 +639,7 @@ class PolygonArbBot:
     
     def scan(self, token_filter: str = None) -> list:
         """
-        Scan for arbitrage opportunities (ArbiGirl compatibility)
+        Scan for arbitrage opportunities (Polygon Arbitrage Engine compatibility)
         
         Args:
             token_filter: Optional token symbol to filter (e.g., "WETH")

@@ -1,6 +1,6 @@
-# AI-Aggregator MEV Bot
+# Polygon Arbitrage Engine
 
-A sophisticated Polygon-based MEV arbitrage bot that scans 300+ token pairs across multiple DEXes to find and execute profitable arbitrage opportunities using flashloans.
+Polygon-based arbitrage engine that scans 300+ token pairs across multiple DEXes to find and execute profitable arbitrage opportunities using flashloans.
 
 ## Features
 
@@ -10,7 +10,8 @@ A sophisticated Polygon-based MEV arbitrage bot that scans 300+ token pairs acro
 - **Accurate Pricing**: Direct DEX contract queries (no approximations)
 - **Smart Execution**: Automatic trade execution with profit verification
 - **Trade Persistence**: SQLite database for trade history and analytics
-- **AI-Powered CLI**: Natural language interface with OpenAI integration
+- **CLI Interface**: Natural language interface for bot control
+- **Web Dashboard**: Real-time Streamlit interface for monitoring and execution
 
 ### Safety & Reliability
 - **RPC Redundancy**: 15+ Polygon RPC endpoints with automatic failover
@@ -41,10 +42,15 @@ See `FIXES_SUMMARY.md` for detailed technical information about all fixes applie
 ┌─────────────────────────────────────────────────────────┐
 │                    User Interface                       │
 ├─────────────────────────────────────────────────────────┤
-│  ai_bridge.py (CLI)                                    │
+│  bridge.py (CLI + API Server)                          │
 │  - Natural language interface                          │
-│  - Keyword parsing                                      │
+│  - FastAPI REST API server                              │
 │  - Direct scanner mode                                  │
+├─────────────────────────────────────────────────────────┤
+│  Streamlit Frontend (Web Dashboard)                     │
+│  - Real-time dashboard                                   │
+│  - Visual charts and analytics                           │
+│  - Trade execution interface                             │
 └────────────┬──────────────────────────────────────────────┘
              │
              ↓
@@ -129,8 +135,81 @@ nano .env  # Edit with your keys
 
 2. **Start the CLI**
 ```bash
-python ai_bridge.py
+python bridge.py
 ```
+
+## Web Dashboard (Optional)
+
+For a visual web interface, use the Streamlit dashboard:
+
+### **Install Frontend Dependencies**
+```bash
+cd frontend
+pip install -r requirements.txt
+```
+
+### **Launch Web Dashboard**
+```bash
+# Start backend API first (in separate terminal)
+python api_server.py
+
+# Then launch frontend
+./scripts/start-frontend.sh
+# Or manually:
+cd frontend && streamlit run streamlit_app.py
+```
+
+### **Access Web Interface**
+- **Frontend:** http://localhost:8501
+- **Backend API:** http://localhost:5050
+
+The web dashboard provides:
+- 📊 Real-time opportunity monitoring
+- 📈 Visual profit charts and analytics  
+- ⚡ One-click trade execution
+- 📋 Historical performance tracking
+- 🧪 Test data mode for instant demonstration
+
+### **Web Interface Features**
+
+#### **📊 Real-time Dashboard**
+- Live bot statistics (profit, trades, uptime)
+- Auto-refreshing opportunity monitoring
+- Interactive profit charts using Plotly
+- Status indicators and alerts
+
+#### **🎯 Opportunity Scanner**
+- Manual and automated scanning
+- Adjustable profit thresholds
+- Token filtering and sorting
+- One-click trade execution from opportunities
+
+#### **⚡ Trade Execution Interface**
+- Manual trade proposal creation
+- Auto-execute option for confirmed trades
+- Real-time execution feedback
+- Trade history tracking
+
+#### **🎨 User Experience**
+- **Test Mode:** Toggle for instant mock data vs real scans
+- **Responsive Design:** Works on desktop, tablet, and mobile
+- **Real-time Updates:** Auto-refreshing data and live charts
+- **Professional Interface:** Modern, intuitive design
+
+### **API Endpoints**
+The web interface connects to the backend via REST API:
+- `GET /status` - Bot statistics and uptime
+- `POST /scan` - Scan for arbitrage opportunities
+- `POST /scan/test` - Test scan with mock data (instant)
+- `POST /simulate` - Simulate trade strategies
+- `POST /propose` - Execute trade proposals
+- `GET /cache/status` - Cache status information
+
+### **Performance**
+- **Test Scans:** Instant response with mock data
+- **Real Scans:** ~2-3 minutes (full arbitrage calculation)
+- **Auto-refresh:** Configurable intervals (1-30 seconds)
+- **Timeout Handling:** Graceful error management
 
 3. **Run a scan**
 ```
@@ -397,14 +476,14 @@ See [LICENSE](LICENSE) file for details.
 - Comply with all applicable laws
 - MEV can be competitive and unprofitable
 
-The authors assume no liability for any losses incurred.
+No liability is assumed for any losses incurred.
 
 ## Support
 
-- GitHub Issues: [Report bugs](https://github.com/yourusername/ai-aggregator/issues)
-- Documentation: See `QUICK_START.md` for setup guide
-- Logs: Check `arbigirl.log` for debugging
-- Automation: See `AUTOMATION_README.md` for graph automation
+- GitHub Issues: [Report bugs](https://github.com/yllvar/polygon-arb-engine/issues)
+- Documentation: See `docs/QUICK_START.md` for setup guide
+- Logs: Check logs directory for debugging
+- Automation: See `docs/AUTOMATION_README.md` for graph automation
 
 ## Acknowledgments
 

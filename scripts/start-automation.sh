@@ -3,8 +3,9 @@
 # Just run: ./start-automation.sh
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PID_FILE="$SCRIPT_DIR/automation.pid"
-LOG_DIR="$SCRIPT_DIR/logs"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+PID_FILE="$PROJECT_DIR/automation.pid"
+LOG_DIR="$PROJECT_DIR/logs"
 
 # Colors
 RED='\033[0;31m'
@@ -35,14 +36,14 @@ echo -e "${CYAN}========================================${NC}"
 echo ""
 
 # Check .env file
-if [ ! -f "$SCRIPT_DIR/.env" ]; then
+if [ ! -f "$PROJECT_DIR/.env" ]; then
     echo -e "${RED}❌ .env file not found!${NC}"
     echo -e "${YELLOW}Please create .env file with your configuration${NC}"
     exit 1
 fi
 
 # Source .env to check AUTO_EXECUTE setting
-source "$SCRIPT_DIR/.env"
+source "$PROJECT_DIR/.env"
 
 echo -e "${GREEN}Configuration:${NC}"
 echo -e "  MIN_TVL_USD: ${MIN_TVL_USD:-3000}"
@@ -65,9 +66,9 @@ fi
 # Start automation in background
 echo -e "${GREEN}🚀 Starting automation in background...${NC}"
 
-cd "$SCRIPT_DIR"
+cd "$PROJECT_DIR"
 
-nohup python3 run_graph_automation.py > "$LOG_DIR/automation-$(date +%Y%m%d-%H%M%S).log" 2>&1 &
+nohup python3 src/run_graph_automation.py > "$LOG_DIR/automation-$(date +%Y%m%d-%H%M%S).log" 2>&1 &
 
 PID=$!
 echo $PID > "$PID_FILE"

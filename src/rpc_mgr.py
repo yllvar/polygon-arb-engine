@@ -80,7 +80,8 @@ class RPCEndpoint:
 class RPCManager:
     def __init__(self):
         # Load from json or env fallback
-        json_path = "rpc_endpoints.json"
+        project_root = os.getenv("PROJECT_ROOT", ".")
+        json_path = os.path.join(project_root, "config", "rpc_endpoints.json")
         print(f"\n{Fore.CYAN}Looking for RPC config at: {os.path.abspath(json_path)}{Style.RESET_ALL}")
         
         if os.path.exists(json_path):

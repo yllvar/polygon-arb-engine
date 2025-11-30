@@ -36,46 +36,6 @@ All critical trading logic and pricing issues have been resolved:
 
 See `FIXES_SUMMARY.md` for detailed technical information about all fixes applied.
 
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    User Interface                       │
-├─────────────────────────────────────────────────────────┤
-│  bridge.py (CLI + API Server)                          │
-│  - Natural language interface                          │
-│  - FastAPI REST API server                              │
-│  - Direct scanner mode                                  │
-├─────────────────────────────────────────────────────────┤
-│  Streamlit Frontend (Web Dashboard)                     │
-│  - Real-time dashboard                                   │
-│  - Visual charts and analytics                           │
-│  - Trade execution interface                             │
-└────────────┬──────────────────────────────────────────────┘
-             │
-             ↓
-    ┌───────────────────────────────────────────┐
-    │          Core Scanner Layer               │
-    ├───────────────────────────────────────────┤
-    │  pool_scanner.py  →  arb_scanner.py      │
-    │  (find pools)        (detect arbs)       │
-    │         ↓                   ↓             │
-    │  price_math.py   (calculate prices)      │
-    └──────────┬──────────────────┬─────────────┘
-               │                  │
-    ┌──────────┴──────┐  ┌───────┴──────────┐
-    │  rpc_mgr.py     │  │ trade_database.py│
-    │  (RPC failover) │  │ (SQLite logging) │
-    └─────────────────┘  └──────────────────┘
-               │
-    ┌──────────┴─────────────────┐
-    │   tx_builder.py             │
-    │   (build transactions)      │
-    │          ↓                  │
-    │   flashloan_contract.py     │
-    │   (execute flashloans)      │
-    └─────────────────────────────┘
-```
 
 ## Installation
 

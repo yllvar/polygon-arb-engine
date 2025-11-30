@@ -29,6 +29,9 @@ Thumbs.db
 .vscode/
 *.sqlite3
 
+# === Documentation ===
+docs/
+
 # === Build / Distribution ===
 build/
 dist/

@@ -34,23 +34,19 @@ All critical trading logic and pricing issues have been resolved:
 - **FlashbotsTxBuilder Fix**: Added compatibility alias for Polygon (no Flashbots on Polygon)
 - **Comprehensive Unit Tests**: 16/16 tests passing, covering edge cases and math validation
 
-See `FIXES_SUMMARY.md` for detailed technical information about all fixes applied.
-
-
 ## Installation
 
 ### Prerequisites
 - Python 3.8+
 - Polygon RPC access (Alchemy, Infura, or public)
-- OpenAI API key (optional, for AI features)
 - Wallet with MATIC for gas
 
 ### Setup
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/ai-aggregator.git
-cd ai-aggregator
+git clone https://github.com/yllvar/polygon-arb-engine.git
+cd polygon-arb-engine
 ```
 
 2. **Install dependencies**
@@ -68,7 +64,6 @@ Required `.env` variables:
 ```bash
 # API Keys
 ALCHEMY_API_KEY=your_alchemy_key
-OPENAI_API_KEY=your_openai_key  # Optional
 
 # Wallet (for execution)
 WALLET_PRIVATE_KEY=your_private_key
@@ -78,7 +73,7 @@ ARBIGIRL_MIN_PROFIT_USD=1.0
 ARBIGIRL_AUTO_EXECUTE=false  # Set to true for auto-execution
 ```
 
-4. **Deploy flashloan contract** (optional, for execution)
+4. **Deploy flashloan contract** 
    - See `remix bot/flashloan_contract.py` for deployment instructions
    - Or use Remix IDE with `remix bot/flashloanbot.sol`
    - Update `.env` with `FLASHLOAN_CONTRACT_ADDRESS=0x...`
@@ -226,11 +221,6 @@ See `AUTOMATION_README.md` for detailed automation setup.
 The bot uses 15+ public and private RPC endpoints with automatic failover:
 - Alchemy (preferred)
 - Infura
-- Ankr
-- Nodies
-- Public endpoints
-
-See `rpc_mgr.py` for full list.
 
 ## Database & Analytics
 
@@ -261,55 +251,6 @@ db.export_to_csv("trades_export.csv", days=30)
 - **opportunities**: All detected opportunities
 - **errors**: Error log with context
 - **performance_metrics**: Scan times, success rates, etc.
-
-## Development
-
-### Project Structure
-
-```
-ai-aggregator/
-├── ai_bridge.py               # Unified CLI client
-├── run_graph_automation.py   # Graph-based automation runner
-├── automation-manager.sh     # Service management script
-├── arb_scanner.py             # Arbitrage detection logic
-├── pool_scanner.py            # Pool discovery and scanning
-├── price_math.py              # Price calculations (V2/V3)
-├── tx_builder.py              # Transaction builder + Gas optimization
-├── flashloan_contract.py      # Contract ABI and helpers
-├── advanced_mev_module.py     # Advanced MEV and graph arbitrage
-├── trade_database.py          # SQLite persistence layer
-├── rpc_mgr.py                 # RPC manager with failover
-├── polygon_arb_bot.py         # Main bot orchestrator
-├── registries.py              # Token and DEX registries
-├── abis.py                    # Contract ABIs
-├── cache.py                   # Persistent caching system
-├── auto_executor.py           # Flash loan execution
-├── price_data_fetcher.py      # Pool data fetching
-├── test_math_calculations.py  # Unit tests
-├── requirements.txt           # Python dependencies
-└── remix bot/                 # Remix IDE files
-    └── flashloanbot.sol       # Solidity flashloan contract
-```
-
-### Adding a New DEX
-
-1. Add DEX factory address to `registries.py`
-2. Add pool discovery logic in `helpers/discover_pools.py`
-3. Add price calculation in `price_math.py`
-4. Add router address to pool registry
-
-### Running Tests
-
-```bash
-# Install test dependencies
-pip install pytest pytest-cov
-
-# Run tests
-python test_math_calculations.py
-
-# Individual test files
-python test_fixes.py
-```
 
 ## Security Considerations
 
@@ -342,61 +283,6 @@ python test_fixes.py
 - **Slippage Protection**: Configured in trade execution
 - **Gas Price Ceiling**: Max acceptable gas price
 
-## Troubleshooting
-
-### Common Issues
-
-**"RPC endpoint timeout"**
-- Check your RPC API keys
-- Try different endpoints in `rpc_mgr.py`
-- Increase timeout values
-
-**"No opportunities found"**
-- Lower `MIN_PROFIT_USD` threshold
-- Check if pools are loaded (`status` command)
-- Verify RPC connectivity
-
-**"Execution failed"**
-- Ensure wallet has MATIC for gas
-- Check contract is deployed
-- Verify contract address in `.env`
-
-**"CLI not responding"**
-- Check if `ai_bridge.py` is running
-- Verify RPC endpoints are working
-- Check `.env` configuration
-
-### Logs
-
-- CLI logs: `arbigirl.log`
-- Automation logs: `logs/automation-*.log`
-- Database: `trades.db` (use SQLite browser)
-
-## Roadmap
-
-### Completed ✅
-- Multi-DEX pool scanning
-- Accurate price calculations with slippage modeling
-- Arbitrage detection with graph-based pathfinding
-- Trade database with analytics
-- AI-powered CLI interface
-- Graph automation system
-- Comprehensive unit tests (16/16 passing)
-- Dynamic gas cost estimation
-- Flash loan execution automation
-
-### In Progress 🚧
-- Advanced MEV protection strategies
-- Performance optimization for high-frequency scanning
-- Enhanced error handling and recovery
-
-### Planned 📋
-- Multi-chain support (Ethereum, Arbitrum, Optimism)
-- Machine learning optimization
-- Web dashboard
-- Backtesting framework
-- Mobile app for monitoring
-
 ## Performance
 
 ### Benchmarks (Polygon Mainnet)
@@ -412,15 +298,6 @@ python test_fixes.py
 - Enable caching (default 24h)
 - Run on server with good connectivity
 - Use direct mode for fastest scanning
-
-## Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new features
-4. Submit a pull request
 
 ## License
 
@@ -438,20 +315,6 @@ See [LICENSE](LICENSE) file for details.
 
 No liability is assumed for any losses incurred.
 
-## Support
-
-- GitHub Issues: [Report bugs](https://github.com/yllvar/polygon-arb-engine/issues)
-- Documentation: See `docs/QUICK_START.md` for setup guide
-- Logs: Check logs directory for debugging
-- Automation: See `docs/AUTOMATION_README.md` for graph automation
-
-## Acknowledgments
-
-- OpenZeppelin for secure contract patterns
-- Aave and Balancer for flashloan protocols
-- Web3.py for Ethereum interaction
-- FastAPI for REST API framework
-
 ---
 
-**Happy arbitraging! 🚀💰**
+**Happy day dreaming! 🚀💰**
